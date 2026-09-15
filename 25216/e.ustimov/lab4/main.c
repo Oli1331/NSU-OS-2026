@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX_LENGTH 100
+#define MAX_LENGTH 10000
 
 typedef struct Node_of_list_s {
     char* str;
@@ -20,7 +20,7 @@ void list_init(List* ls) {
     nd->next_str = NULL;
 }
 
-void add_str(List *ls, char* str, size_t len) {
+void add_str(List* ls, char* str, size_t len) {
 
     char* new_line = malloc((len + 1) * sizeof(char));
     if (new_line == NULL)exit(1);
@@ -34,16 +34,16 @@ void add_str(List *ls, char* str, size_t len) {
     next->next_str = NULL;
 
     ls->last->next_str = next;
-    ls->last=next;
+    ls->last = next;
 }
 
-int read_str(List *ls, char* buf) {
+int read_str(List* ls, char* buf) {
 
-    if(fgets(buf, MAX_LENGTH, stdin)==NULL)exit(1);
+    if (fgets(buf, MAX_LENGTH, stdin) == NULL)exit(1);
     size_t len = strlen(buf);
     if (len < 1 || buf[0] == '.')return 0;
     else {
-        add_str(ls, buf, len);
+        add_str(ls, buf, len-1);
         return 1;
     }
 }
@@ -54,7 +54,7 @@ void print_list(List ls) {
         if (ptr->str != NULL)printf("%s\n", ptr->str);
         ptr = ptr->next_str;
     } while (ptr != NULL);
-
+    
 }
 
 void free_list(List ls) {
