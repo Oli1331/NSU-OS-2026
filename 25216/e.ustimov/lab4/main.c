@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX_LENGTH 10000
+#define MAX_LENGTH 4096
 
 typedef struct Node_of_list_s {
     char* str;
@@ -18,6 +18,27 @@ void list_init(List* ls) {
     if (nd == NULL)exit(1);
     ls->head = ls->last = nd;
     nd->next_str = NULL;
+}
+
+int my_getline(char** buf, size_t* len_buf) {
+    if (*buf == NULL && *len_buf == 0) {
+        *len_buf = 1;
+        *buf = malloc(*len_buf * sizeof(char));
+        if (*buf == NULL)exit(1);
+
+    }
+    int cnt_sym = 0;
+    char symbol;
+    while ((symbol = getc(stdin)) != '\n' && symbol != EOF) {
+        if (*len_buf <= cnt_sym) {
+            (*len_buf) *= 2;
+            *buf = realloc(*buf, *len_buf * sizeof(char));
+        }
+        (*buf)[cnt_sym] = symbol;
+        (cnt_sym)++;
+    }
+    (*buf)[cnt_sym]='\0';
+    return cnt_sym;
 }
 
 void add_str(List* ls, char* str, size_t len) {
@@ -37,24 +58,13 @@ void add_str(List* ls, char* str, size_t len) {
     ls->last = next;
 }
 
-int read_str(List* ls, char* buf) {
-
-    if (fgets(buf, MAX_LENGTH, stdin) == NULL)exit(1);
-    size_t len = strlen(buf);
-    if (len < 1 || buf[0] == '.')return 0;
-    else {
-        add_str(ls, buf, len-1);
-        return 1;
-    }
-}
-
 void print_list(List ls) {
     Node* ptr = ls.head;
     do {
         if (ptr->str != NULL)printf("%s\n", ptr->str);
         ptr = ptr->next_str;
     } while (ptr != NULL);
-    
+
 }
 
 void free_list(List ls) {
@@ -72,13 +82,20 @@ void free_list(List ls) {
 int main() {
     List ls;
     list_init(&ls);
-    char* buffer = malloc(MAX_LENGTH * sizeof(char));
-    if (buffer == NULL)exit(1);
 
-    while (read_str(&ls, buffer));
+    char* buffer=0;
+    size_t len_buf = 0;
+
+    while (my_getline(&buffer,&len_buf)){
+        if(buffer[0]=='.')
+            break;
+        
+        add_str(&ls,buffer,len_buf);
+    }
     print_list(ls);
     free_list(ls);
-    free(buffer);
+    if(buffer!=NULL)free(buffer);
+    
 
     return 0;
 }
