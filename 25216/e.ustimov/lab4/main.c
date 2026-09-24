@@ -37,7 +37,8 @@ int my_getline(char** buf, size_t* len_buf) {
         (*buf)[cnt_sym] = symbol;
         (cnt_sym)++;
     }
-    (*buf)[cnt_sym]='\0';
+    if (symbol == EOF)return -1;
+    (*buf)[cnt_sym] = '\0';
     return cnt_sym;
 }
 
@@ -83,19 +84,19 @@ int main() {
     List ls;
     list_init(&ls);
 
-    char* buffer=0;
+    char* buffer = 0;
     size_t len_buf = 0;
 
-    while (my_getline(&buffer,&len_buf)){
-        if(buffer[0]=='.')
+    while (my_getline(&buffer, &len_buf) != -1) {
+        if (buffer[0] == '.')
             break;
-        
-        add_str(&ls,buffer,len_buf);
+
+        add_str(&ls, buffer, len_buf);
     }
     print_list(ls);
     free_list(ls);
-    if(buffer!=NULL)free(buffer);
-    
+    if (buffer != NULL)free(buffer);
+
 
     return 0;
 }
