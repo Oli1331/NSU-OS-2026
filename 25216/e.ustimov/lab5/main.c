@@ -46,7 +46,7 @@ size_t build_table(int fd, Vector* table, char* buf, int size_buf) {
             }
         }
     }
-    if (length_line > 0) {
+    if ((length_line-1) > 0) {
         push_vector(table, global_position - length_line + 1, length_line);
         if (length_line > max_length)max_length = length_line;
     }
@@ -60,7 +60,7 @@ void free_vector(Vector* v) {
 
 void print_table(Vector* v) {
     for (int i = 0; i < v->count; i++) {
-        printf("line %d, shift %ld, length %zu\n", i, v->line[i].shift, v->line[i].lenght);
+        printf("line %d, shift %ld, length %zu\n", i+1, v->line[i].shift, v->line[i].lenght);
     }
 }
 
