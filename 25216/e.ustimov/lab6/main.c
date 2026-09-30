@@ -67,6 +67,7 @@ size_t build_table(int fd, Vector *table, char *buf, int size_buf) {
 void free_vector(Vector *v) { free(v->line); }
 
 void print_table(Vector *v) {
+  printf("Table: \n");
   for (int i = 0; i < v->count; i++) {
     printf("line %d, shift %ld, length %zu\n", i + 1, v->line[i].shift,
            v->line[i].lenght);
@@ -98,6 +99,12 @@ int main(int argc, char **argv) {
 
   if (setjmp(env_alrm) != 0) {
     print_table(&table);
+    lseek(fd, 0, SEEK_SET);
+    ssize_t reads_byte;
+    printf("Content: \n");
+    while ((reads_byte = read(fd, buf, size_buf)) > 0) {
+      write(STDOUT_FILENO, buf, reads_byte);
+    }
     free_vector(&table);
     free(buf);
     return 0;
@@ -108,7 +115,7 @@ int main(int argc, char **argv) {
 
   // print_table(&table);
   while (1) {
-    alarm(5);
+    alarm(3);
     if (scanf("%d", &input) != 1 || input > table.count) {
       if (errno == EINTR) {
         print_table(&table);
