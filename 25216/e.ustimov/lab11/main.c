@@ -30,6 +30,6 @@ int main() {
 		exit(1);
 	}
 	wait(NULL);
-	printf("\nEverything is fine\n");
+	printf("\nEverything is fine!\n");
 	return 0;
 }
