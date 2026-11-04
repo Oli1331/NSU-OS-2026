@@ -39,7 +39,6 @@ int main() {
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	char c;
 	while (1) {
-
 		printf("You agree? ");
 		fflush(stdout);
 		read(STDIN_FILENO, &c, 1);
