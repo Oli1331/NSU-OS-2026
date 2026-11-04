@@ -27,7 +27,6 @@ int main() {
 		perror("can't set exit func\n");
 		return 1;
 	}
-
 	if (signal(SIGINT, sig_handler) == SIG_ERR) {
 		perror("can't set signal handler\n");
 		return 1;
